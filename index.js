@@ -1,4 +1,13 @@
+function PomodoroClock() {
+  return (
+    <React.Fragment>
+      <h1>Pomodoro Clock</h1>
+      <Controls />
+    </React.Fragment>
+  )
+}
+
 ReactDOM.render(
-    <h1>Pomodoro Clock</h1>,
+    <PomodoroClock />,
     document.querySelector('#root')
 );
