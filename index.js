@@ -7,8 +7,10 @@ class PomodoroClock extends React.Component {
       seconds: 0,
       pause: 5
     }
+    this.startStop = this.startStop.bind(this);
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
+    this.countdown = this.countdown.bind(this);
   }
 
   increment(e) {
@@ -43,6 +45,34 @@ class PomodoroClock extends React.Component {
     }
   }
 
+  countdown() {
+    let {minutes, seconds} = this.state;
+    minutes = !seconds ? minutes - 1 : minutes;
+    seconds = !seconds ? 59 : seconds - 1;
+
+    if (minutes < 0) {
+      this.setState({
+        minutes: 0,//this.state.session,
+        seconds: 0
+      })
+      clearTimeout(this.state.timeoutId)
+    } else {
+      this.setState({
+        minutes, seconds
+      })
+    }
+
+    this.setState({
+      timeoutId: setTimeout(this.countdown, 1000)
+    })
+  }
+
+  startStop() {
+    this.setState({
+      timeoutId: setTimeout(this.countdown, 1000)
+    })
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -51,7 +81,7 @@ class PomodoroClock extends React.Component {
         <Setting label="break" length={this.state.pause} increment={this.increment} decrement={this.decrement}/>
         <h2 id="timer-label">Session</h2>
         <h2 id="time-left">{this.state.minutes}:{this.state.seconds}</h2>
-        <Controls />
+        <Controls startStop={this.startStop}/>
       </React.Fragment>
     )
   }
