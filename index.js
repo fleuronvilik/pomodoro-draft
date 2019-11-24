@@ -3,6 +3,8 @@ class PomodoroClock extends React.Component {
     super(props);
     this.state = {
       session: 25,
+      minutes: 25,
+      seconds: 0,
       pause: 5
     }
     this.increment = this.increment.bind(this);
@@ -11,10 +13,12 @@ class PomodoroClock extends React.Component {
 
   increment(e) {
     const clicked = e.target.parentNode.id || e.target.id;
-    const {session, pause} = this.state;
+    let {session, pause} = this.state;
+    session = session < 60 ? session + 1 : session
     if (clicked.includes("session")) {
       this.setState({
-        session: session < 60 ? session + 1 : session
+        session: session,
+        minutes: session
       })
     } else {
       this.setState({
@@ -25,10 +29,12 @@ class PomodoroClock extends React.Component {
 
   decrement(e) {
     const clicked = e.target.parentNode.id || e.target.id;
-    const {session, pause} = this.state;
+    let {session, pause} = this.state;
+    session = session > 1 ? session - 1 : session
     if (clicked.includes("session")) {
       this.setState({
-        session: session > 1 ? session - 1 : session
+        session: session,
+        minutes: session
       })
     } else {
       this.setState({
@@ -44,7 +50,7 @@ class PomodoroClock extends React.Component {
         <Setting label="session" length={this.state.session} increment={this.increment} decrement={this.decrement}/>
         <Setting label="break" length={this.state.pause} increment={this.increment} decrement={this.decrement}/>
         <h2 id="timer-label">Session</h2>
-        <h2 id="time-left">{this.state.session}:{"00"}</h2>
+        <h2 id="time-left">{this.state.minutes}:{this.state.seconds}</h2>
         <Controls />
       </React.Fragment>
     )
