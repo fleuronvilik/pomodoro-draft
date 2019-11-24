@@ -43,6 +43,8 @@ class PomodoroClock extends React.Component {
         <h1>Pomodoro Clock</h1>
         <Setting label="session" length={this.state.session} increment={this.increment} decrement={this.decrement}/>
         <Setting label="break" length={this.state.pause} increment={this.increment} decrement={this.decrement}/>
+        <h2 id="timer-label">Session</h2>
+        <h2 id="time-left">{this.state.session}:{"00"}</h2>
         <Controls />
       </React.Fragment>
     )
