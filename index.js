@@ -5,6 +5,7 @@ class PomodoroClock extends React.Component {
       session: 25,
       minutes: 25,
       seconds: 0,
+      isRunning: false,
       pause: 5
     }
     this.startStop = this.startStop.bind(this);
@@ -20,7 +21,7 @@ class PomodoroClock extends React.Component {
     if (clicked.includes("session")) {
       this.setState({
         session: session,
-        minutes: session
+        minutes: this.state.isRunning ? this.state.minutes : session
       })
     } else {
       this.setState({
@@ -36,7 +37,7 @@ class PomodoroClock extends React.Component {
     if (clicked.includes("session")) {
       this.setState({
         session: session,
-        minutes: session
+        minutes: this.state.isRunning ? this.state.minutes : session
       })
     } else {
       this.setState({
@@ -58,19 +59,21 @@ class PomodoroClock extends React.Component {
       clearTimeout(this.state.timeoutId)
     } else {
       this.setState({
-        minutes, seconds
+        minutes, seconds, timeoutId: setTimeout(this.countdown, 1000)
       })
     }
-
-    this.setState({
-      timeoutId: setTimeout(this.countdown, 1000)
-    })
   }
 
   startStop() {
-    this.setState({
-      timeoutId: setTimeout(this.countdown, 1000)
-    })
+    if (this.state.isRunning) {
+      clearTimeout(this.state.timeoutId)
+      this.setState({isRunning: false})
+    } else {
+      this.setState({
+        timeoutId: setTimeout(this.countdown, 1000),
+        isRunning: true
+      })
+    }
   }
 
   render() {
