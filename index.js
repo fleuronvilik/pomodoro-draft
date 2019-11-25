@@ -6,7 +6,8 @@ class PomodoroClock extends React.Component {
       minutes: 25,
       seconds: 0,
       isRunning: false,
-      pause: 5
+      pause: 5,
+      pauseIsNext: true
     }
     this.reset = this.reset.bind(this);
     this.startStop = this.startStop.bind(this);
@@ -48,17 +49,17 @@ class PomodoroClock extends React.Component {
   }
 
   countdown() {
-    let {minutes, seconds} = this.state;
+    let {minutes, seconds, pauseIsNext} = this.state;
     minutes = !seconds ? minutes - 1 : minutes;
     seconds = !seconds ? 59 : seconds - 1;
-
+    pauseIsNext = minutes < 0 ? !this.state.pauseIsNext : this.state.pauseIsNext;
     if (minutes < 0) {
       this.setState({
-        minutes: 0,//this.state.session,
+        minutes: pauseIsNext ? this.state.session : this.state.pause,
         seconds: 0,
-        isRunning: false
+        pauseIsNext,
+        timeoutId: setTimeout(this.countdown, 1000)
       })
-      clearTimeout(this.state.timeoutId)
     } else {
       this.setState({
         minutes, seconds, timeoutId: setTimeout(this.countdown, 1000)
@@ -85,7 +86,8 @@ class PomodoroClock extends React.Component {
       minutes: 25,
       seconds: 0,
       isRunning: false,
-      pause: 5      
+      pause: 5,
+      pauseIsNext: true      
     })
   }
 
@@ -95,7 +97,9 @@ class PomodoroClock extends React.Component {
         <h1>Pomodoro Clock</h1>
         <Setting label="session" length={this.state.session} increment={this.increment} decrement={this.decrement}/>
         <Setting label="break" length={this.state.pause} increment={this.increment} decrement={this.decrement}/>
-        <h2 id="timer-label">Session</h2>
+        <h2 id="timer-label">
+          {this.state.pauseIsNext ? "Session" : "Break"}
+        </h2>
         <h2 id="time-left">{this.state.minutes}:{this.state.seconds}</h2>
         <Controls startStop={this.startStop} reset={this.reset}/>
       </React.Fragment>
