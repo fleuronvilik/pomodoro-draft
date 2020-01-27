@@ -7,7 +7,8 @@ class PomodoroClock extends React.Component {
       seconds: 0,
       isRunning: false,
       pause: 5,
-      pauseIsNext: true
+      pauseIsNext: true,
+      beep: document.querySelector('audio')
     }
     this.reset = this.reset.bind(this);
     this.startStop = this.startStop.bind(this);
@@ -58,29 +59,32 @@ class PomodoroClock extends React.Component {
         minutes: pauseIsNext ? this.state.session : this.state.pause,
         seconds: 0,
         pauseIsNext,
-        timeoutId: setTimeout(this.countdown, 1000)
+        //intervalId: setInterval(this.countdown, 1000)
       })
+      this.state.beep.play()
     } else {
       this.setState({
-        minutes, seconds, timeoutId: setTimeout(this.countdown, 1000)
+        minutes, seconds//, intervalId: setInterval(this.countdown, 1000)
       })
     }
   }
 
   startStop() {
     if (this.state.isRunning) {
-      clearTimeout(this.state.timeoutId)
+      clearInterval(this.state.intervalId)
       this.setState({isRunning: false})
     } else {
       this.setState({
-        timeoutId: setTimeout(this.countdown, 1000),
+        intervalId: setInterval(this.countdown, 1000),
         isRunning: true
       })
     }
   }
 
   reset() {
-    if (this.state.isRunning) clearTimeout(this.state.timeoutId)
+    if (this.state.isRunning) clearInterval(this.state.intervalId)
+    this.state.beep.pause()
+    this.state.beep.currentTime = 0;
     this.setState({
       isRunning: false,
       pauseIsNext: true,
