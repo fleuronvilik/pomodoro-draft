@@ -82,25 +82,28 @@ class PomodoroClock extends React.Component {
   reset() {
     if (this.state.isRunning) clearTimeout(this.state.timeoutId)
     this.setState({
+      isRunning: false,
+      pauseIsNext: true,
       session: 25,
       minutes: 25,
       seconds: 0,
-      isRunning: false,
-      pause: 5,
-      pauseIsNext: true      
+      pause: 5      
     })
   }
 
   render() {
+    const label = this.state.pauseIsNext ? "Session" : "Break";
+
     return (
       <React.Fragment>
         <h1>Pomodoro Clock</h1>
         <Setting label="session" length={this.state.session} increment={this.increment} decrement={this.decrement}/>
         <Setting label="break" length={this.state.pause} increment={this.increment} decrement={this.decrement}/>
-        <h2 id="timer-label">
-          {this.state.pauseIsNext ? "Session" : "Break"}
-        </h2>
-        <h2 id="time-left">{this.state.minutes}:{this.state.seconds}</h2>
+        <TimeLeft
+          mm={this.state.minutes < 10 ? `0${this.state.minutes}` : this.state.minutes}
+          ss={this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}
+          label={label}
+        />
         <Controls startStop={this.startStop} reset={this.reset}/>
       </React.Fragment>
     )
